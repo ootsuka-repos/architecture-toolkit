@@ -1,0 +1,16 @@
+{
+  "name": "architecture-toolkit",
+  "owner": {
+    "name": "ootsuka-repos"
+  },
+  "metadata": {
+    "description": "コードベースのアーキテクチャを体系的にレビューし所見を並列・安全に適用するスキル群"
+  },
+  "plugins": [
+    {
+      "name": "architecture-toolkit",
+      "source": ".",
+      "description": "アーキテクチャのレビュー(architecture-review)と所見の並列・安全適用(architecture-fix)の2スキルを内包するプラグイン。"
+    }
+  ]
+}
