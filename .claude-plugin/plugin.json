@@ -1,0 +1,15 @@
+{
+  "name": "architecture-toolkit",
+  "description": "コードベースのアーキテクチャを体系的にレビューし、その所見を並列・安全に適用する2つのスキル(architecture-review / architecture-fix)を内包するプラグイン。",
+  "version": "0.1.0",
+  "author": {
+    "name": "ootsuka-repos"
+  },
+  "keywords": [
+    "architecture",
+    "review",
+    "refactor",
+    "code-quality",
+    "technical-debt"
+  ]
+}
