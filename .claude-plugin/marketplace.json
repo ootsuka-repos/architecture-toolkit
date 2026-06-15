@@ -4,13 +4,13 @@
     "name": "ootsuka-repos"
   },
   "metadata": {
-    "description": "コードベースのアーキテクチャを体系的にレビューし所見を並列・安全に適用するスキル群"
+    "description": "アーキテクチャのレビュー・所見の並列適用・新機能の設計から並列実装まで担うスキル群"
   },
   "plugins": [
     {
       "name": "architecture-toolkit",
       "source": ".",
-      "description": "アーキテクチャのレビュー(architecture-review)と所見の並列・安全適用(architecture-fix)の2スキルを内包するプラグイン。"
+      "description": "アーキテクチャのレビュー(architecture-review)・所見の並列安全適用(architecture-fix)・新機能の設計から並列実装(feature-build)の3スキルを内包するプラグイン。"
     }
   ]
 }
