@@ -23,11 +23,12 @@ const CFG = {
 }
 
 // 1周の各サブステップは既存スキルの実行に委譲する委譲関数(プロジェクトの起動方法に合わせて実装)。
-//   runReview(n, ledger, scope) -> { reviewPath, findings, counts }   // architecture-review を実行
+//   runReview(n, ledger, scope) -> { reviewPath, findings, counts, roadmap }  // architecture-review を実行
 //   runFix(n, targetIds)        -> { results }                         // architecture-fix の wave 実行に委譲
 //   runVerify()                 -> { green: boolean, output }          // 全体検証(委譲先 verify.md)
 //   commitIter(n, msg)          -> { commit }                          // 緑確認後に周/wave 単位でコミット
-// counts = {critical, high, medium, low}
+// counts  = {critical, high, medium, low}
+// roadmap = {now:[{finding_id}], next:[...], later:[...]}  // output-schema.md のトップレベル roadmap(正本=SSOT)
 
 const ledger = loadLedger()      // arch-loop/ledger.json(無ければ空)
 const history = []               // 各周の counts/progress を蓄積(収束カーブ)
@@ -38,8 +39,13 @@ for (let n = 1; n <= CFG.maxIterations; n++) {
   // ── Review: 調査を委譲。差分スコープ + 周期的な全体スイープ ─────────────
   phase('Review')
   const scope = (n === 1 || n % CFG.fullSweepEvery === 0) ? 'full' : 'diff'
-  const { findings, counts } = await runReview(n, ledger, scope)
+  const { findings, counts, roadmap } = await runReview(n, ledger, scope)
   log(`iter${n} review: c=${counts.critical} h=${counts.high} m=${counts.medium} l=${counts.low} (${scope})`)
+
+  // roadmap は finding 直下ではなくトップレベルの mapping(SSOT)。finding.id → bucket を解決して選定に使う。
+  const roadmapOf = {}
+  for (const bucket of ['now', 'next', 'later'])
+    for (const it of (roadmap?.[bucket] ?? [])) roadmapOf[it.finding_id] = bucket
 
   // ── 収束(成功)判定はレビュー直後にも見る: 既にゲート達成なら何もせず終了 ──
   if (CFG.qualityGate(counts)) { stopReason = 'converged'; history.push({ n, counts, progress: 0 }); break }
@@ -47,7 +53,7 @@ for (let n = 1; n <= CFG.maxIterations; n++) {
   // ── Select: 台帳で絞った今周の対象集合 ───────────────────────────────
   const targets = findings.filter(f =>
     CFG.applyPolicy.severities.includes(f.severity) &&
-    CFG.applyPolicy.roadmap.includes(f.roadmap) &&
+    CFG.applyPolicy.roadmap.includes(roadmapOf[f.id]) &&
     ledger[f.id]?.status !== 'wontfix' &&
     !(ledger[f.id]?.status === 'failed' && (ledger[f.id]?.attempts ?? 0) >= 2)
   )
@@ -87,8 +93,16 @@ return { stopReason, iterations: history, ledger }
 ## 委譲の実装メモ
 - `runReview` / `runFix` は**既存スキルを起動するだけ**。本テンプレートに監査ロジックや wave 分割を
   書き込まない(再実装は DRY 違反で二重メンテになる)。実体は各スキルの SKILL/references に従う。
+- **Workflow スクリプト内ではスキルを直接「起動」できない**(使えるのは `agent()`/`parallel()`/`pipeline()`/
+  `workflow()`)。委譲関数は次のどちらかで実体化する:
+  - `runReview` → review スキルの手順を渡した `agent()`(大規模なら `parallel()` でサブシステム並列)。
+    出力 JSON を書かせ、そのパスから `{findings, counts, roadmap}` を読む。
+  - `runFix` → fix スキルの Workflow を **`workflow('apply-arch-fixes', { steps })` で子として呼ぶ**
+    (`architecture-fix/references/workflow-template.md` の雛形)。中身の wave 分割・並列適用は fix 側に委ねる。
+- **入れ子は1段まで**: 本ループ(トップ)から `workflow()`/`agent()` を呼ぶのは可。ただし**子の中でさらに
+  `workflow()` を呼ぶと throw する**。fix の Workflow は内部で `agent()`/`parallel()` のみを使う(さらに nest しない)
+  ので、ループ→fix の1段で成立する。review/fix を別々の子 workflow にしても、どちらも深さ1なら同居できる。
 - 周内の並列(wave)は fix スキルの Workflow に内包される。本テンプレートの barrier は**周境界**のみ。
-- review を別プロセス/別エージェントで回す場合、出力 JSON のパスを受け取って `findings`/`counts` を読む。
 
 ## コミットと証跡
 - **緑を確認した周だけ**コミットを積む(`refactor(arch): iter<n> <要約>`)。回帰した周は切り戻し、コミットしない。

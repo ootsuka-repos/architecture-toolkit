@@ -21,7 +21,9 @@ review(n)  →  select(n)  →  fix(n)  →  verify(n)  →  record(n)  →  収
 
 ### 2. select(n) — 今周の対象を選ぶ
 review JSON の `findings[]` から `apply_policy` に従って今周直す集合を決める:
-- 既定: `severity ∈ {critical, high}` かつ roadmap が `now`/`next`。
+- 既定: `severity ∈ {critical, high}` かつ roadmap が `now`/`next`。**roadmap は finding 直下ではなく
+  トップレベルの `roadmap{now,next,later}` mapping(正本=SSOT)**。`finding_id → bucket` を解決して絞る
+  (per-finding に複製しない。雛形の `roadmapOf` を参照)。
 - **台帳で除外**: `wontfix` と、`attempts` 上限に達した `failed` は外す(振動防止)。
 - **依存順を尊重**: `fix.deps` の先行が未了の finding は今周に入れない(次周以降)。
 - 件数が多すぎる周は上位 severity から件数を絞ってよい(1周を小さく保つと検証と切り分けが楽)。

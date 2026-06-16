@@ -95,5 +95,5 @@ return { results }
   本体が最終 wave 後にまとめて全体検証(verify.md)してから push 等を判断する。
 
 ## 規模に応じた調整
-- finding 数が少なく wave も1〜2なら、Workflow を使わず `dispatching-parallel-agents` で素直に並列起動でも可。
+- finding 数が少なく wave も1〜2なら、Workflow を使わず素朴に並列エージェントを起動(or 手番で順に適用)でも可。
 - 多数(目安 6件以上 or wave 3段以上)で順序・検証・コミットを決定論的に回したいときに Workflow が活きる。

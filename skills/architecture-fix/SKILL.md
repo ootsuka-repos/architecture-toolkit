@@ -1,14 +1,15 @@
 ---
 name: architecture-fix
 description: >
-  architecture-review が出力した構造化 JSON(findings) を入力に、修正を「並列で効率よく・安全に」
-  適用するスキル。findings の fix 仕様(before/after/refs/verify)と deps・ファイル重複から
-  衝突しないグループ(wave)に分け、Workflow で並列適用し、各 wave ごとに検証してコミットする。
-  ユーザーが「(レビューで)出した指摘を直して」「architecture-review.json を適用して」
-  「指摘を並列で一気に修正して」「findings を反映して」「リファクタ計画を実行して」
-  「レビュー結果を反映して」などと言ったときに使う。
-  architecture-review の続きとして、所見の一括適用・実行フェーズを担う相棒スキル。
-  単発の小修正ではなく、複数 finding をまとめて安全に適用する場面で必ず使うこと。
+  architecture-review が出力した構造化所見(architecture-review.json の findings)を、
+  衝突しない wave に分けて Workflow で並列適用し、各 wave で検証してグループコミットするスキル。
+  findings の fix 仕様(before/after/refs/verify)と deps・ファイル重複から衝突しないグループ(wave)を作る。
+  「(レビューで)出した指摘を適用/反映して」「architecture-review.json を直して」
+  「findings を並列で一気に修正して」「リファクタ計画を実行して」「レビュー結果を反映して」など、
+  評価済みの所見をまとめて安全にコードへ反映する実行フェーズで使う。
+  前提として所見(JSON)が既にあること——まだ評価していなければ先に architecture-review、
+  review→fix を収束まで繰り返すなら architecture-loop、新機能の実装は feature-build。
+  単発・1ファイルで明白な修正だけなら本スキルは不要。
 ---
 
 # Architecture Fix（レビュー所見の並列・安全適用）
@@ -39,7 +40,8 @@ wave 内はファイルが重ならないので、worktree を使わず作業ツ
 - `architecture-review.json` を読む(場所が不明なら聞く/リポジトリ直下を探す)。スキーマは
   architecture-review スキルの `references/output-schema.md` と同一。
 - **適用対象 findings を決める**: 既定は引数で指定(`now` / `next` / `later` / `all` / `F01,F05` など)。
-  指定が無ければ全 finding を依存順で対象にする。
+  指定が無ければ全 finding を依存順で対象にする。`now`/`next`/`later` 指定時は、roadmap が finding 直下では
+  なく**トップレベル `roadmap{now,next,later}` mapping(正本)**にあるので、`finding_id → bucket` を解決して絞る。
 - **適用前ゲート**(壊れた状態で始めない):
   - git 作業ツリーがクリーンか確認。未コミット変更があれば退避/コミットを促す。
   - main 等の保護ブランチ上なら作業ブランチを切る。

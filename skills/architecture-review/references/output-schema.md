@@ -9,6 +9,9 @@
 - 値の語彙は固定: `severity ∈ {critical,high,medium,low}`, `effort ∈ {S,M,L}`,
   `confidence ∈ {verified,likely,speculative}`（speculative は必ず根拠不足を意味する）。
 - `recipe` は fix-recipes.md の R番号、`principles` は principles.md の ID、`viewpoints` は viewpoints.md の番号。
+- **roadmap は finding 直下に持たせず、トップレベルの `roadmap{now,next,later}` を正本(SSOT)にする**。
+  fix/loop が「now/next/later で対象選定」する際は、この mapping から `finding_id → bucket` を解決する
+  (per-finding に roadmap を複製すると二重管理になり SSOT を崩す)。
 
 ## トップレベル構造
 ```json
