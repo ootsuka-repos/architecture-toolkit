@@ -1,7 +1,7 @@
 {
   "name": "architecture-toolkit",
   "description": "コードベースのアーキテクチャをレビューし所見を並列・安全に適用し、収束まで再帰反復し、さらに新機能を設計から並列実装まで進める4つのスキル(architecture-review / architecture-fix / architecture-loop / feature-build)を内包するプラグイン。",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "author": {
     "name": "ootsuka-repos"
   },

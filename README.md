@@ -45,11 +45,27 @@
 
 ## インストール
 
-Claude Code のプラグインマーケットプレイス経由、もしくはこのリポジトリを参照して追加してください。
+ターミナルで以下を実行します（マーケットプレイスを追加 → プラグインを導入）。
 
+```bash
+claude plugin marketplace add ootsuka-repos/architecture-toolkit
+claude plugin install architecture-toolkit@architecture-toolkit
 ```
-/plugin
+
+Claude Code 内なら `/plugin` で対話メニューからも追加できます。導入後はセッションを再起動すると
+4スキル(architecture-review / architecture-fix / architecture-loop / feature-build)が有効になります。
+
+## 更新（入れ直し）
+
+リポジトリを更新したら、マーケットプレイスを再取得してプラグインを更新します（反映には再起動が必要）。
+
+```bash
+claude plugin marketplace update architecture-toolkit
+claude plugin update architecture-toolkit@architecture-toolkit
 ```
+
+すでに古い版が入っている場合もこの手順で最新に入れ替わります。完全に入れ直すなら
+`claude plugin uninstall architecture-toolkit@architecture-toolkit` の後に上記の install を実行します。
 
 ## ライセンス
 
