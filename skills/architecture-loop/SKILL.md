@@ -50,7 +50,7 @@ description: >
 - **適用前ゲート**(壊れた状態でループを始めない):
   - git 作業ツリーがクリーンか確認。未コミット変更は退避/コミットを促す。
   - main 等の保護ブランチ上なら作業ブランチを切る(`refactor/arch-loop` 等)。
-  - ベースラインの検証が通ることを確認(各スキルの `references/verify.md`)。最初から赤なら先に切り分け。
+  - ベースラインの検証が通ることを確認(`architecture-fix` の `references/verify.md`)。最初から赤なら先に切り分け。
 - **イテレーション成果物の置き場**: `arch-loop/iter-<n>/` に各周の review JSON とサマリを残す(履歴=収束の証跡)。
 
 ### Phase 1 — 1イテレーションを定義する（review → fix の合成）
