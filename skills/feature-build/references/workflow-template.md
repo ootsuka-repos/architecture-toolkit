@@ -21,7 +21,7 @@ const WAVES = args.waves   // [{ serial?: bool, phase: string, tasks: [...] }, .
 
 const RESULT = {
   type: 'object',
-  required: ['id', 'status', 'files_changed', 'verify_passed'],
+  required: ['id', 'status', 'verify_passed'],
   properties: {
     id: { type: 'string' },
     status: { enum: ['done', 'failed', 'blocked'] },

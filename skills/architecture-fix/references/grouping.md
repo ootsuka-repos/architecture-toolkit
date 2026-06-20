@@ -49,6 +49,8 @@ while remaining:
 - どうしても重なるが並列したい稀なケースのみ、その finding を別 wave にするか worktree 隔離にする。
 
 ## 5. 実行順の組み立て
+
+> Workflow へ渡す STEPS の要素オブジェクト形(消費側 `workflow-template.md` の契約): SERIAL は `{ kind: 'serial', finding }`(単数)、並列 wave は `{ kind: 'wave', findings }`(複数配列)。下記の実行列はこの2形の並びとして出力する。
 最終的な実行列は次のように混在してよい:
 ```
 [ SERIAL(F_rename1) ] → [ wave0: F02,F07,F11 (並列) ] → [ wave1: F03,F09 (並列) ] → [ SERIAL(F_move2) ] → …

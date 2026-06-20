@@ -88,8 +88,8 @@ for (let n = 1; n <= CFG.maxIterations; n++) {
   history.push({ n, counts, progress })
   saveLedger(ledger); saveSummary(n, { counts, progress, results })
 
-  if (detectOscillation(ledger, history)) { stopReason = 'oscillation'; break }  // loop-control.md §5
-  if (progress < CFG.progressThreshold)   { stopReason = 'diminishing'; break }  // 頭打ち(逓減)
+  if (progress < CFG.progressThreshold)   { stopReason = 'diminishing'; break }  // 頭打ち(逓減) — §1 で #3(振動 #4 より先に評価)
+  if (detectOscillation(ledger, history)) { stopReason = 'oscillation'; break }  // loop-control.md §5(#4)
   prevHigh = high
   // ここまで緑・進捗あり → 次周へ(barrier 通過)
 }
