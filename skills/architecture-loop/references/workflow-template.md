@@ -22,11 +22,18 @@ const CFG = {
   fullSweepEvery: args.fullSweepEvery ?? 3,
 }
 
-// 1周の各サブステップは既存スキルの実行に委譲する委譲関数(プロジェクトの起動方法に合わせて実装)。
+// 以下はすべて擬似シグネチャ＝骨格。実体は実装者が用意する(本テンプレートには定義を置かない)。
+// (A) skill 委譲関数(プロジェクトの起動方法に合わせて実装。実体化は下記「委譲の実装メモ」参照):
 //   runReview(n, ledger, scope) -> { reviewPath, findings, counts, roadmap }  // architecture-review を実行
 //   runFix(n, targetIds)        -> { results }                         // architecture-fix の wave 実行に委譲
 //   runVerify()                 -> { green: boolean, output }          // 全体検証(委譲先 verify.md)
 //   commitIter(n, msg)          -> { commit }                          // 緑確認後に周/wave 単位でコミット
+// (B) 局所ヘルパ(台帳・サマリの I/O と振動検知。実装者が下記契約どおりに実装する):
+//   loadLedger()                -> ledger(object)                     // arch-loop/ledger.json を読む(無ければ {})。loop-control.md §4
+//   updateLedger(ledger, results, n) -> void                         // applied/failed(+attempts)/skipped を反映、上限超で wontfix 昇格。loop-control.md §4
+//   saveLedger(ledger)          -> void                              // ledger を arch-loop/ledger.json に永続化
+//   saveSummary(n, summary)     -> void                              // arch-loop/iter-<n>/summary.json に件数/progress/results を書く
+//   detectOscillation(ledger, history) -> boolean                    // 出戻り/純増ゼロ往復を検知。loop-control.md §5
 // counts  = {critical, high, medium, low}
 // roadmap = {now:[{finding_id}], next:[...], later:[...]}  // output-schema.md のトップレベル roadmap(正本=SSOT)
 

@@ -14,6 +14,9 @@
   (per-finding に roadmap を複製すると二重管理になり SSOT を崩す)。
 
 ## トップレベル構造
+> 注: 以下は形を示すための抜粋で、`findings[]` は代表 1 件(F01)のみ載せている。
+> `principle_coverage.finding_ids`(F03/F07) と `roadmap`(F05/F09) が参照する ID は、
+> 実出力では完全な `findings[]` に存在する前提（=自己点検「参照先が実在」を満たす）。
 ```json
 {
   "meta": {
