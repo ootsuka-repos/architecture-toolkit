@@ -84,6 +84,6 @@ return { report }
 ## 運用メモ
 - **全体検証とコミットは main 側(このスクリプトの外/各 wave 後)で実行**する。スクリプトはファイル編集を
   subagent に任せ、検証・コミットの判断はオーケストレータが握る。
-- subagent の `before/after` 仕様より実コードが優先。乖離があれば subagent は整合させ、無理なら `blocked` で返す。
+- subagent の `spec`(設計仕様/契約)より実コードが優先。乖離があれば subagent は整合させ、無理なら `blocked` で返す。
 - 配線 wave で結合テストを通し、最後に Phase 0 の受け入れ条件を1つずつ確認する。
 - ファイル衝突が設計上どうしても避けられない wave だけ `isolation: 'worktree'` にフォールバックする。

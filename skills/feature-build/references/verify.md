@@ -17,7 +17,7 @@
 - 型: `npx tsc --noEmit`
 - リンタ: `npx eslint .`
 - テスト: `npm test`（または `npx vitest run` / `npx jest`）
-- 起動スモーク: `npm run build && npm start`（または dev サーバを上げて主要ルートに 1 リクエスト）
+- 起動スモーク: `npm run build` の後に `npm start`（または dev サーバを上げて主要ルートに 1 リクエスト）。**コマンド連結はシェルに合わせる**(POSIX/bash・cmd・PowerShell 7+ は `a && b`、Windows PowerShell 5.1 は `&&` 不可なので 2 コマンドに分けるか `a; if ($?) { b }`)。
 
 ### Python
 - 型: `mypy .`（設定があれば）
