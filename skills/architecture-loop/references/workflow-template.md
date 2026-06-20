@@ -98,7 +98,7 @@ return { stopReason, iterations: history, ledger }
   - `runReview` → review スキルの手順を渡した `agent()`(大規模なら `parallel()` でサブシステム並列)。
     出力 JSON を書かせ、そのパスから `{findings, counts, roadmap}` を読む。
   - `runFix` → fix スキルの Workflow を **`workflow('apply-arch-fixes', { steps })` で子として呼ぶ**
-    (`architecture-fix/references/workflow-template.md` の雛形)。中身の wave 分割・並列適用は fix 側に委ねる。
+    (`architecture-fix/references/workflow-template.md` の雛形)。中身の wave 分割・並列適用は fix 側に委ねる。**ただし名前指定 `workflow('apply-arch-fixes', …)` は、その Workflow が保存/登録済み(例: `.claude/workflows/` に実体がある)のときだけ解決される**(未知の名前は throw)。雛形が .md に埋め込まれているだけなら、(a) 先に名前付き Workflow として登録するか、(b) 雛形の JS を実体 `.js` に書き出して `workflow({ scriptPath: '<書き出した.js>' }, { steps })` で呼ぶ。**`.md` をそのまま `scriptPath` に渡しても JS として実行できない**点に注意。
 - **入れ子は1段まで**: 本ループ(トップ)から `workflow()`/`agent()` を呼ぶのは可。ただし**子の中でさらに
   `workflow()` を呼ぶと throw する**。fix の Workflow は内部で `agent()`/`parallel()` のみを使う(さらに nest しない)
   ので、ループ→fix の1段で成立する。review/fix を別々の子 workflow にしても、どちらも深さ1なら同居できる。
