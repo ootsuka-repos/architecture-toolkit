@@ -38,6 +38,9 @@ function buildPrompt(t) {
     `新機能の実装タスク ${t.id}: ${t.title}`,
     `設計仕様(契約): ${JSON.stringify(t.spec)}`,
     `触れてよいファイル(これ以外は絶対に編集しない): ${t.files.join(', ')}`,
+    // deps_context / acceptance は task モデル({id,title,spec,files,deps,tests,verify})の素フィールドではなく
+    // オーケストレータが実行時に供給する派生値: deps_context は deps(先行 task の id)から解決した確定済みの型/IF、
+    // acceptance は Phase 0 の受け入れ条件を当該 task 単位に割り付けたもの。未供給時は下記フォールバックで劣化する。
     `依存先で確定済みの型/IF: ${t.deps_context ?? '(なし)'}`,
     `受け入れ条件: ${t.acceptance ?? t.title}`,
     '',
