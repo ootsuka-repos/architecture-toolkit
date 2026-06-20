@@ -40,7 +40,7 @@ while remaining:
     wave = []
     usedFiles = set()
     for f in remaining (順に):
-        if f.deps がすべて (既存wave or 完了) で満たされ
+        if f.fix.deps がすべて (既存wave or 完了) で満たされ
            and touched(f) ∩ usedFiles == ∅:
             wave.append(f); usedFiles |= touched(f)
     waves.append(wave); remaining -= wave

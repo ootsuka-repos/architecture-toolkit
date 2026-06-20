@@ -14,7 +14,12 @@ export const meta = {
 }
 
 // STEPS は Phase1 の出力。kind: 'serial' は1件、'wave' は並列群。
-// 各 finding f は {id, summary, recipe, before, after, refs, verify, files, deps} を持つ。
+// 各 finding f は {id, summary, recipe, before, after, refs, verify, files, deps} を持つ(平坦形)。
+// これは output-schema の入れ子 finding を平坦化した射影。STEPS を組むとき必ず次のように写す:
+//   f.summary=finding.fix.summary, f.recipe=finding.fix.recipe, f.before=finding.fix.before,
+//   f.after=finding.fix.after, f.refs=finding.fix.refs, f.verify=finding.fix.verify,
+//   f.deps=finding.fix.deps, f.files=finding.location.files, f.id=finding.id。
+//   (raw finding をそのまま渡すと f.summary/before/after/files/refs/verify が undefined になる)
 const STEPS = args.steps   // Workflow 呼び出しの args で渡す
 
 const RESULT = {
